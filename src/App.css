@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap');
+
+:root {
+  --blue-primary: #0057b8;
+  --blue-dark: #003d82;
+  --blue-deeper: #002655;
+  --blue-light: #e8f1fc;
+  --blue-accent: #1e90ff;
+  --blue-mid: #2563eb;
+  --white: #ffffff;
+  --gray-light: #f4f8ff;
+  --gray-border: #d0dff5;
+  --text-dark: #0a1a3a;
+  --text-mid: #2a4070;
+  --text-light: #6080a0;
+  --red-accent: #e03030;
+  --shadow-sm: 0 2px 8px rgba(0,87,184,0.10);
+  --shadow-md: 0 4px 24px rgba(0,87,184,0.15);
+  --radius: 10px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--white); color: var(--text-dark); min-height: 100vh; }
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.btn-primary { background: var(--blue-primary); color: var(--white); border: none; border-radius: 6px; padding: 10px 22px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+.btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); }
+.btn-outline { background: transparent; color: var(--blue-primary); border: 2px solid var(--blue-primary); border-radius: 6px; padding: 8px 20px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+.btn-outline:hover { background: var(--blue-primary); color: white; }
