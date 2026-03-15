@@ -1,22 +1,29 @@
-import Header from './components/Header'
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import Features from './components/Features'
-import CourseSections from './components/CourseSections'
+import { useState } from 'react'
+import TopBar from './components/TopBar'
+import TopNavbar from './components/TopNavbar'
+import BottomNavbar from './components/BottomNavbar'
 import Footer from './components/Footer'
-import './App.css'
+import HomePage from './pages/HomePage'
+import ContentPage from './pages/ContentPage'
+import './styles/global.css'
 
-function App() {
+export default function App() {
+  const [activePage, setActivePage] = useState('home')
+
   return (
-    <div className="app">
-      <Header />
-      <Navbar />
-      <Hero />
-      <Features />
-      <CourseSections />
-      <Footer />
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <TopBar />
+      <TopNavbar activePage={activePage} setActivePage={setActivePage} />
+
+      <main style={{ flex: 1 }}>
+        {activePage === 'home'
+          ? <HomePage setActivePage={setActivePage} />
+          : <ContentPage page={activePage} setActivePage={setActivePage} />
+        }
+      </main>
+
+      <BottomNavbar activePage={activePage} setActivePage={setActivePage} />
+      <Footer setActivePage={setActivePage} />
     </div>
   )
 }
-
-export default App
