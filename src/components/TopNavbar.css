@@ -2,10 +2,20 @@
   background:linear-gradient(90deg,var(--b9) 0%,var(--b7) 60%,var(--b5) 100%);
   border-bottom:3px solid var(--b5);
   position:sticky; top:var(--top-h); z-index:290;
+  overflow:visible !important;
 }
-.tn-inner { display:flex; align-items:stretch; min-height:var(--nav-h); }
-.tn-list { display:flex; align-items:stretch; width:100%; }
-.tn-item { position:relative; display:flex; align-items:stretch; }
+.tn-inner {
+  display:flex; align-items:stretch; min-height:var(--nav-h);
+  overflow-x:auto; -webkit-overflow-scrolling:touch;
+}
+.tn-list {
+  display:flex; align-items:stretch; width:100%; min-width:0;
+  overflow-x:auto; overscroll-behavior-x:contain;
+}
+.tn-item {
+  position:relative; display:flex; align-items:stretch;
+  flex:0 0 auto;
+}
 .tn-btn {
   display:flex; align-items:center; gap:6px; padding:0 12px;
   color:rgba(255,255,255,.8); font-size:12px; font-weight:700;
@@ -20,11 +30,14 @@
 .tn-chevron { font-size:9px; opacity:.7; }
 
 .tn-drop {
-  position:absolute; top:calc(100% + 3px); left:0;
+  position:fixed; 
+  top:calc(var(--top-h) + var(--nav-h));
+  left:var(--dropdown-left, 0);
   min-width:380px; max-width:480px;
+  max-height:45vh; overflow-y:auto; overflow-x:hidden;
   background:#fff; border:1.5px solid var(--g200);
   border-radius:0 var(--r-md) var(--r-md) var(--r-md);
-  box-shadow:var(--shadow-lg); z-index:400; padding:10px 0;
+  box-shadow:var(--shadow-lg); z-index:500; padding:10px 0;
   animation:dropIn .16s ease;
 }
 @keyframes dropIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
@@ -54,5 +67,16 @@
   .tn-list.open{display:flex;}
   .tn-item{flex-direction:column;}
   .tn-btn{padding:11px 18px;border-bottom:none;font-size:13px;}
-  .tn-drop{position:static;min-width:unset;max-width:unset;border-radius:0;box-shadow:none;border:none;border-top:1px solid rgba(255,255,255,.1);}
+  .tn-drop{
+    position:static !important;
+    top:auto !important;
+    left:auto !important;
+    max-height:none;
+    min-width:unset;
+    max-width:unset;
+    border-radius:0;
+    box-shadow:none;
+    border:none;
+    border-top:1px solid rgba(255,255,255,.1);
+  }
 }

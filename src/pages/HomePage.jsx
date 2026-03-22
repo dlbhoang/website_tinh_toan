@@ -1,21 +1,44 @@
+import { useState, useEffect, useRef } from 'react'
 import './HomePage.css'
+import statorImg from '../assets/stator.png'
+import heroImg   from '../assets/hero.png'
+import teslaImg  from '../assets/telsa.png'
+import qcImg     from '../assets/qc.png'
 
 export default function HomePage({ setActivePage }) {
+  const [showAd, setShowAd] = useState(true)
+
   return (
     <div className="home">
+
+      {/* ── POPUP QUẢNG CÁO ── */}
+      {showAd && (
+        <div className="ad-overlay" onClick={() => setShowAd(false)}>
+          <div className="ad-modal" onClick={e => e.stopPropagation()}>
+            <button className="ad-close" onClick={() => setShowAd(false)}>✕</button>
+            <img src={qcImg} alt="Quảng cáo Statordata" className="ad-img" />
+            <div className="ad-actions">
+              <button className="ad-btn-primary" onClick={() => setShowAd(false)}>
+                Khám phá ngay →
+              </button>
+              <button className="ad-btn-secondary" onClick={() => setShowAd(false)}>
+                Bỏ qua
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── HERO BOX ── */}
       <section className="hero-box">
         <div className="container">
           <div className="hero-grid">
 
-            {/* Left phone */}
             <div className="hero-left">
               <div className="app-tag">App:<br/>Statordata</div>
               <PhoneMockup />
             </div>
 
-            {/* Center */}
             <div className="hero-center">
               <p className="hc-badge">PHẦN MỀM THIẾT KẾ MÁY ĐIỆN.</p>
               <h1 className="hc-title">
@@ -38,16 +61,16 @@ export default function HomePage({ setActivePage }) {
               </ul>
             </div>
 
-            {/* Right stator diagram */}
+            {/* Right: VIDEO / Placeholder */}
             <div className="hero-right">
-              <StatorDiagram />
-              <p className="stator-cap">Ngay đây video: Phân bố mật độ từ thông mạch từ stator.</p>
+              <StatorVideoPlaceholder />
+              <p className="stator-cap">Video: Phân bố mật độ từ thông mạch từ stator.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── MACH TU & THONG SO: 2 columns ── */}
+      {/* ── MACH TU & THONG SO ── */}
       <section className="mt-section">
         <div className="container">
           <h2 className="mt-title">MẠCH TỪ VÀ THÔNG SỐ VẬN HÀNH TRONG MÁY ĐIỆN.</h2>
@@ -115,7 +138,6 @@ export default function HomePage({ setActivePage }) {
           <div className="threed-box">
             <div className="threed-inner">
               <Threed3D />
-              <p className="threed-label">Trong này có những hình ảnh 3D, chạy trong này.<br/><span>(ảnh này gửi qua sau)</span></p>
             </div>
           </div>
         </div>
@@ -133,7 +155,7 @@ export default function HomePage({ setActivePage }) {
               <p>Website <strong>DATA STATOR</strong> được xây dựng dựa trên nền tảng lý thuyết và kinh nghiệm thực tiễn đó, do <strong>Kỹ sư Võ Nguyên Bá Liêu</strong> – Khoa cơ Điện, Trường Đại Học Lạc Hồng, nhằm hỗ trợ kỹ sư và sinh viên trong việc tính toán, thiết kế và phân tích dữ liệu động cơ một cách chính xác, nhanh chóng và chuyên nghiệp.</p>
             </div>
             <div className="history-photo">
-              <NikolaTeslaViz />
+              <img src={teslaImg} alt="Nikola Tesla" className="tesla-img"/>
               <p className="tesla-name">Nikola Tesla: 1856 - 1943</p>
             </div>
           </div>
@@ -153,6 +175,164 @@ export default function HomePage({ setActivePage }) {
           </div>
         </div>
       </section>
+    </div>
+  )
+}
+
+/* ────────────────────────────────────────
+   STATOR VIDEO PLACEHOLDER
+   Animated canvas — mô phỏng từ thông quay
+   Khi có video thật:
+     1. Bỏ comment: import videoSrc from '../assets/stator.mp4'
+     2. Thay <StatorVideoPlaceholder /> bằng:
+        <video src={videoSrc} autoPlay loop muted playsInline
+               style={{width:'100%',maxWidth:260,borderRadius:12,
+                       boxShadow:'0 4px 24px rgba(0,60,140,.2)'}} />
+──────────────────────────────────────── */
+function StatorVideoPlaceholder() {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    const W = canvas.width = 260
+    const H = canvas.height = 260
+    const cx = W / 2, cy = H / 2
+    const oR = 112, iR = 66
+    const slots = 36
+    let angle = 0
+    let raf
+
+    // Flux colour scale: 0→1 mapped to blue→green→yellow→red
+    function fluxColor(t) {
+      // t: 0..1
+      if (t < 0.25) {
+        const f = t / 0.25
+        return `rgb(${Math.round(f*0)},${Math.round(f*136)},${Math.round(255-f*119)})`
+      } else if (t < 0.5) {
+        const f = (t - 0.25) / 0.25
+        return `rgb(${Math.round(f*0)},${Math.round(136+f*119)},${Math.round(136-f*136)})`
+      } else if (t < 0.75) {
+        const f = (t - 0.5) / 0.25
+        return `rgb(${Math.round(f*255)},${Math.round(255-f*106)},0)`
+      } else {
+        const f = (t - 0.75) / 0.25
+        return `rgb(255,${Math.round(149-f*149)},0)`
+      }
+    }
+
+    function draw() {
+      // Background
+      ctx.fillStyle = '#000d1e'
+      ctx.fillRect(0, 0, W, H)
+
+      // Outer ring
+      ctx.beginPath()
+      ctx.arc(cx, cy, oR, 0, Math.PI * 2)
+      ctx.fillStyle = '#0f1f3a'
+      ctx.fill()
+      ctx.strokeStyle = '#1e3a70'
+      ctx.lineWidth = 1.5
+      ctx.stroke()
+
+      // Rotating flux field — colour each slot by sinusoidal B value
+      for (let i = 0; i < slots; i++) {
+        const a = (i / slots) * Math.PI * 2 - Math.PI / 2
+        // 3-phase flux: each slot belongs to one of 3 phases
+        const phaseOffset = (i / slots) * Math.PI * 6  // 3 pairs of poles
+        const B = (Math.sin(phaseOffset - angle * 3) + 1) / 2   // 0..1
+        const color = fluxColor(B)
+
+        const x1 = cx + (iR + 4) * Math.cos(a)
+        const y1 = cy + (iR + 4) * Math.sin(a)
+        const x2 = cx + (oR - 4) * Math.cos(a)
+        const y2 = cy + (oR - 4) * Math.sin(a)
+
+        ctx.beginPath()
+        ctx.moveTo(x1, y1)
+        ctx.lineTo(x2, y2)
+        ctx.strokeStyle = color
+        ctx.lineWidth = 5
+        ctx.lineCap = 'round'
+        ctx.globalAlpha = 0.9
+        ctx.stroke()
+        ctx.globalAlpha = 1
+      }
+
+      // Inner bore (rotor space)
+      ctx.beginPath()
+      ctx.arc(cx, cy, iR, 0, Math.PI * 2)
+      ctx.fillStyle = '#030c1a'
+      ctx.fill()
+      ctx.strokeStyle = '#0d2a50'
+      ctx.lineWidth = 1.5
+      ctx.stroke()
+
+      // Rotating flux arrow inside bore
+      const ax = cx + (iR - 14) * Math.cos(angle)
+      const ay = cy + (iR - 14) * Math.sin(angle)
+      ctx.beginPath()
+      ctx.moveTo(cx, cy)
+      ctx.lineTo(ax, ay)
+      ctx.strokeStyle = '#ffffff'
+      ctx.lineWidth = 2
+      ctx.globalAlpha = 0.6
+      ctx.stroke()
+      ctx.globalAlpha = 1
+
+      // Centre dot
+      ctx.beginPath()
+      ctx.arc(cx, cy, 4, 0, Math.PI * 2)
+      ctx.fillStyle = '#3b82f6'
+      ctx.fill()
+
+      // Colour scale bar (right side)
+      const barX = 248, barY = 18, barH = 224
+      const grad = ctx.createLinearGradient(0, barY, 0, barY + barH)
+      grad.addColorStop(0,    '#ff2200')
+      grad.addColorStop(0.33, '#ff9900')
+      grad.addColorStop(0.66, '#00ff88')
+      grad.addColorStop(1,    '#0088ff')
+      ctx.fillStyle = grad
+      ctx.beginPath()
+      ctx.roundRect(barX, barY, 8, barH, 3)
+      ctx.fill()
+
+      // Scale labels
+      ctx.fillStyle = '#aaaaaa'
+      ctx.font = '9px monospace'
+      ctx.textAlign = 'right'
+      ctx.fillText('1.60T', barX - 2, barY + 5)
+      ctx.fillText('0.00T', barX - 2, barY + barH + 4)
+
+      // Label
+      ctx.fillStyle = '#4a90d9'
+      ctx.font = 'bold 9px monospace'
+      ctx.textAlign = 'center'
+      ctx.fillText('PHÂN BỐ MẬT ĐỘ TỪ THÔNG', cx - 10, H - 8)
+
+      angle += 0.022
+      raf = requestAnimationFrame(draw)
+    }
+
+    draw()
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  return (
+    <div className="video-placeholder-wrap">
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: '100%',
+          maxWidth: 260,
+          borderRadius: 12,
+          boxShadow: '0 4px 24px rgba(0,60,140,.25)',
+          display: 'block',
+        }}
+      />
+      <div className="video-ph-badge">▶ Simulation</div>
     </div>
   )
 }
@@ -180,35 +360,6 @@ function PhoneMockup() {
         <div className="p-footer">{['🏧','🎁','📖','🔑','🆘'].map((ic,i)=><span key={i}>{ic}</span>)}</div>
       </div>
     </div>
-  )
-}
-
-function StatorDiagram() {
-  const n=36, cx=130, cy=130, oR=112, iR=66
-  return (
-    <svg viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg" style={{width:'100%',maxWidth:260,borderRadius:12,boxShadow:'0 4px 24px rgba(0,60,140,.2)'}}>
-      <defs>
-        <radialGradient id="sbg" cx="50%" cy="50%"><stop offset="0%" stopColor="#001840"/><stop offset="100%" stopColor="#000818"/></radialGradient>
-        <linearGradient id="sflux" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#ff2200"/><stop offset="25%" stopColor="#ff9900"/>
-          <stop offset="50%" stopColor="#00ff88"/><stop offset="75%" stopColor="#0088ff"/>
-          <stop offset="100%" stopColor="#330099"/>
-        </linearGradient>
-      </defs>
-      <circle cx={cx} cy={cy} r="128" fill="url(#sbg)"/>
-      <circle cx={cx} cy={cy} r={oR} fill="#1a2a48" stroke="#2a4a88" strokeWidth="1.5"/>
-      {[...Array(n)].map((_,i)=>{
-        const a=(i/n)*2*Math.PI-Math.PI/2
-        const cols=['#ff4444','#4488ff','#ff9900']
-        const c=cols[Math.floor(i/12)%3]
-        return <line key={i} x1={cx+(iR+28)*Math.cos(a)} y1={cy+(iR+28)*Math.sin(a)} x2={cx+iR*Math.cos(a)} y2={cy+iR*Math.sin(a)} stroke={c} strokeWidth="5" strokeLinecap="round" opacity=".87"/>
-      })}
-      <circle cx={cx} cy={cy} r={iR} fill="#050f20" stroke="#1a3a60" strokeWidth="1.5"/>
-      <circle cx={cx} cy={cy} r={iR-8} fill="#030c18"/>
-      <rect x="247" y="18" width="10" height="224" fill="url(#sflux)" rx="3"/>
-      <text x="245" y="16" fontSize="7" fill="#aaa" textAnchor="end">1.60T</text>
-      <text x="245" y="248" fontSize="7" fill="#aaa" textAnchor="end">0.00T</text>
-    </svg>
   )
 }
 
@@ -269,45 +420,44 @@ function EfficiencyChart() {
 }
 
 function Threed3D() {
-  const slots=24, cx=90, cy=90, oR=78, iR=46
-  return (
-    <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" style={{width:180,height:180}}>
-      <defs>
-        <radialGradient id="t3bg"><stop offset="0%" stopColor="#001020"/><stop offset="100%" stopColor="#000"/>
-        </radialGradient>
-      </defs>
-      <circle cx={cx} cy={cy} r={oR+8} fill="url(#t3bg)"/>
-      <circle cx={cx} cy={cy} r={oR} fill="#111d30" stroke="var(--b7)" strokeWidth="2"/>
-      {[...Array(slots)].map((_,i)=>{
-        const a=(i/slots)*Math.PI*2; const hue=i*(360/slots)
-        return <line key={i} x1={cx+(iR+24)*Math.cos(a)} y1={cy+(iR+24)*Math.sin(a)} x2={cx+iR*Math.cos(a)} y2={cy+iR*Math.sin(a)} stroke={`hsl(${hue},80%,60%)`} strokeWidth="5" strokeLinecap="round" opacity=".85"/>
-      })}
-      <circle cx={cx} cy={cy} r={iR} fill="#040d1a" stroke="var(--b8)" strokeWidth="1.5"/>
-      <circle cx={cx} cy={cy} r={iR-6} fill="#020810"/>
-      {[...Array(6)].map((_,i)=>{
-        const a=i/6*Math.PI*2
-        return <circle key={i} cx={cx+(iR-14)*Math.cos(a)} cy={cy+(iR-14)*Math.sin(a)} r="5" fill="var(--b6)" opacity=".7"/>
-      })}
-      <circle cx={cx} cy={cy} r="8" fill="var(--b5)"/>
-    </svg>
-  )
-}
+  const images = [
+    { src: statorImg, caption: 'Mô hình 3D kết cấu Stator' },
+    { src: heroImg,   caption: 'Phân bố từ thông mạch từ Stator' },
+  ]
+  const [current, setCurrent] = useState(0)
+  const [paused, setPaused] = useState(false)
 
-function NikolaTeslaViz() {
+  useEffect(() => {
+    if (paused) return
+    const timer = setInterval(() => {
+      setCurrent(prev => (prev + 1) % images.length)
+    }, 3500)
+    return () => clearInterval(timer)
+  }, [paused, images.length])
+
+  const prev = () => setCurrent(p => (p - 1 + images.length) % images.length)
+  const next = () => setCurrent(p => (p + 1) % images.length)
+
   return (
-    <div style={{width:130,background:'var(--g100)',border:'2px solid var(--g300)',borderRadius:'var(--r-md)',overflow:'hidden',flexShrink:0}}>
-      <svg viewBox="0 0 130 170" xmlns="http://www.w3.org/2000/svg">
-        <rect width="130" height="170" fill="#d4c8b8"/>
-        <ellipse cx="65" cy="60" rx="28" ry="34" fill="#c8a882"/>
-        <rect x="30" y="88" width="70" height="82" rx="4" fill="#1a1a2e"/>
-        <rect x="25" y="85" width="80" height="12" rx="3" fill="#2a2a3e"/>
-        <ellipse cx="55" cy="65" rx="5" ry="4" fill="#8b6f47"/>
-        <ellipse cx="75" cy="65" rx="5" ry="4" fill="#8b6f47"/>
-        <path d="M 55 78 Q 65 84 75 78" stroke="#8b6f47" strokeWidth="2" fill="none"/>
-        <rect x="35" y="95" width="25" height="55" rx="2" fill="#2a2a3e"/>
-        <rect x="70" y="95" width="25" height="55" rx="2" fill="#2a2a3e"/>
-        <text x="65" y="162" textAnchor="middle" fontSize="9" fill="var(--g600)" fontStyle="italic">Nikola Tesla</text>
-      </svg>
+    <div className="threed-slideshow" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+      <div className="slideshow-track">
+        {images.map((img, i) => (
+          <div key={i} className={`slide ${i === current ? 'slide-active' : ''}`}>
+            <img src={img.src} alt={img.caption} onError={e => { e.target.style.display = 'none' }}/>
+          </div>
+        ))}
+      </div>
+      <button className="slide-btn slide-btn-prev" onClick={prev}>‹</button>
+      <button className="slide-btn slide-btn-next" onClick={next}>›</button>
+      <p className="slide-caption">{images[current].caption}</p>
+      <div className="slide-dots">
+        {images.map((_, i) => (
+          <button key={i} className={`slide-dot ${i === current ? 'dot-active' : ''}`} onClick={() => setCurrent(i)}/>
+        ))}
+      </div>
+      <div className="slide-progress">
+        <div key={current} className={`slide-progress-bar ${!paused ? 'slide-progress-running' : ''}`} style={{ animationDuration: '3.5s' }}/>
+      </div>
     </div>
   )
 }

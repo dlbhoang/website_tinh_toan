@@ -8,6 +8,7 @@ function buildMeta() {
     'lien-he':{ title:'Liên hệ với chúng tôi', crumbs:['Liên hệ'] },
     'ly-thuyet-mach-tu':{ title:'Lý thuyết mạch từ trong máy điện', crumbs:['Kỹ thuật - Công nghệ','Lý thuyết mạch từ'] },
     'thong-so-dinh-muc':{ title:'Thông số định mức động cơ điện', crumbs:['Kỹ thuật - Công nghệ','Thông số định mức'] },
+    'mach-nhanh-song-song':{ title:'Các sơ đồ mạch nhánh song song (A)', crumbs:['Kỹ thuật - Công nghệ','Các sơ đồ mạch nhánh song song (A)'] },
     'huong-dan-ky-thuat':{ title:'Hướng dẫn kỹ thuật tính toán dữ liệu', crumbs:['Hướng dẫn kỹ thuật'] },
   }
   topNavItems.forEach(nav=>nav.children?.forEach(g=>g.items?.forEach(sub=>{
@@ -49,12 +50,54 @@ export default function ContentPage({ page, setActivePage }) {
   )
 }
 
+const PAGE_REQUIREMENTS = Object.fromEntries(Object.keys(META).map(page => {
+  const meta = META[page]
+  if (!meta) return [page, null]
+  const isCalc = meta.isCalc
+  const intro = isCalc
+    ? [
+        'Xác định các thông số đầu vào bắt buộc (số rãnh, số cực, mật độ dòng điện, hệ số xếp lớp, công suất, tốc độ).',
+        'Tính toán sơ đồ khai triển dây quấn, góc lệch, phân bố pha QA-QB hoặc QA-2QB-3QB tùy loại.',
+        'Kiểm tra điều kiện kỹ thuật: mật độ từ thông, độ bền điện môi, điều kiện nhiệt độ. ',
+        'Lập bảng tổng hợp kết quả: số vòng, đường kính dây, điện áp pha, dòng pha, công suất đầu ra.'
+      ]
+    : [
+        'Giải thích lý thuyết nền tảng và công thức cơ bản cho chủ đề này.',
+        'Cung cấp ví dụ hình ảnh, sơ đồ và lưu đồ tính toán để dễ hiểu.',
+        'Nêu rõ ghi chú cảnh báo, điều kiện giới hạn và giả định của bài toán.',
+      ]
+  return [page, { intro, bulletPoints: [
+    `Nội dung trang: ${meta.title || page}`,
+    ...intro,
+    'Cập nhật nội dung chi tiết khi nhận được tài liệu Word và yêu cầu thiết kế (theo phân chia tab).'
+  ]}]
+}))
+
 function getContent(page) {
   if (page==='lien-he') return <LienHeContent/>
   if (page==='dieu-khoan') return <DieuKhoanContent/>
   if (page==='ly-thuyet-mach-tu') return <LyThuyetContent/>
   if (page==='thong-so-dinh-muc') return <ThongSoContent/>
+
+  const requirement = PAGE_REQUIREMENTS[page]
+  if (requirement) return <TopicContent page={page} meta={META[page]} requirements={requirement.bulletPoints} />
+
   return <DefaultContent page={page} meta={META[page]}/>
+}
+
+function TopicContent({ page, meta, requirements }) {
+  return (
+    <div className="cp-topic">
+      <h2>Yêu cầu và Hướng dẫn cho {meta?.title || page}</h2>
+      <p>Đây là nội dung tạm thời dựa trên cấu trúc đã khai báo, có thể cập nhật từ tài liệu Word gốc.</p>
+      <ul>
+        {requirements.map((item, i) => (<li key={i}>{item}</li>))}
+      </ul>
+      <p style={{marginTop: '1rem', color: 'var(--b5)'}}>
+        Mũi nhọn: Nếu cần thêm chi tiết, vui lòng gửi thêm nội dung cụ thể từ file yêu cầu.
+      </p>
+    </div>
+  )
 }
 
 function DefaultContent({ page, meta }) {

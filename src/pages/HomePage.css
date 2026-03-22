@@ -1,3 +1,118 @@
+/* ── THREED SLIDESHOW ── */
+.threed-slideshow {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,60,140,.25);
+  background: #000;
+}
+
+.slideshow-track {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.slide-active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Prev / Next */
+.slide-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(0,0,0,.45);
+  color: #fff;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .2s;
+}
+.slide-btn:hover { background: rgba(0,60,180,.7); }
+.slide-btn-prev { left: 10px; }
+.slide-btn-next { right: 10px; }
+
+/* Caption */
+.slide-caption {
+  position: absolute;
+  bottom: 36px;
+  left: 0; right: 0;
+  text-align: center;
+  font-size: 12px;
+  color: #e0e8ff;
+  background: rgba(0,0,0,.45);
+  padding: 4px 12px;
+  z-index: 5;
+}
+
+/* Dots */
+.slide-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  z-index: 5;
+}
+.slide-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,.4);
+  cursor: pointer;
+  padding: 0;
+  transition: background .2s, transform .2s;
+}
+.dot-active {
+  background: #fff;
+  transform: scale(1.25);
+}
+
+/* Progress bar */
+.slide-progress {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: rgba(255,255,255,.15);
+  z-index: 5;
+}
+.slide-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--b5, #3b82f6);
+}
+.slide-progress-running {
+  animation: slideProgress linear forwards;
+}
+@keyframes slideProgress {
+  from { width: 0% }
+  to   { width: 100% }
+}
 /* HERO */
 .hero-box {
   background:linear-gradient(135deg,var(--b0) 0%,var(--white) 50%,#d6eaff 100%);
@@ -94,3 +209,369 @@
 @media(max-width:1000px){ .hero-grid{grid-template-columns:1fr;} .hero-left,.hero-right{display:none;} }
 @media(max-width:800px){ .mt-grid{grid-template-columns:1fr;} .why-layout{grid-template-columns:1fr;} .history-box{flex-direction:column;} }
 @media(max-width:600px){ .contact-strip{flex-direction:column;gap:12px;} }
+/* ── POPUP QUẢNG CÁO (qc.png) ── */
+.ad-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: adFadeIn .3s ease;
+}
+@keyframes adFadeIn {
+  from { opacity: 0 }
+  to   { opacity: 1 }
+}
+.ad-modal {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px 16px 20px;
+  max-width: 420px;
+  width: 92%;
+  box-shadow: 0 24px 64px rgba(0,40,120,.3);
+  animation: adSlideUp .35s cubic-bezier(.22,1,.36,1);
+  text-align: center;
+}
+@keyframes adSlideUp {
+  from { opacity: 0; transform: translateY(40px) scale(.96) }
+  to   { opacity: 1; transform: translateY(0) scale(1) }
+}
+.ad-close {
+  position: absolute;
+  top: 10px; right: 12px;
+  background: rgba(0,0,0,.45);
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+  transition: background .15s;
+}
+.ad-close:hover { background: rgba(0,0,0,.7); }
+.ad-img {
+  width: 100%;
+  border-radius: 10px;
+  display: block;
+  margin-bottom: 14px;
+  object-fit: cover;
+  max-height: 340px;
+}
+.ad-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.ad-btn-primary {
+  background: var(--b6, #2563eb);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.ad-btn-primary:hover { background: var(--b7, #1d4ed8); transform: translateY(-1px); }
+.ad-btn-secondary {
+  background: none;
+  border: 1.5px solid var(--g300, #d1d5db);
+  color: var(--g500, #6b7280);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color .2s, color .2s;
+}
+.ad-btn-secondary:hover { border-color: var(--g400); color: var(--g700, #374151); }
+
+/* ── VIDEO LOCAL ── */
+.video-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 260px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,60,140,.2);
+  background: #000818;
+}
+.video-local {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+}
+.video-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.video-no-src {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(0,10,30,.75);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.video-no-src span { font-size: 22px; }
+.video-no-src p {
+  font-size: 11px;
+  color: #aac4ff;
+  margin: 0;
+  line-height: 1.5;
+}
+.video-no-src code {
+  font-size: 10.5px;
+  background: rgba(255,255,255,.1);
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: #7dd3fc;
+}
+
+/* ── THREED SLIDESHOW ── */
+.threed-slideshow {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,60,140,.25);
+  background: #000;
+}
+.slideshow-track {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.slide-active { opacity: 1; z-index: 1; }
+.slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.slide-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(0,0,0,.45);
+  color: #fff;
+  border: none;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .2s;
+}
+.slide-btn:hover { background: rgba(0,60,180,.7); }
+.slide-btn-prev { left: 10px; }
+.slide-btn-next { right: 10px; }
+.slide-caption {
+  position: absolute;
+  bottom: 36px; left: 0; right: 0;
+  text-align: center;
+  font-size: 12px;
+  color: #e0e8ff;
+  background: rgba(0,0,0,.45);
+  padding: 4px 12px;
+  z-index: 5;
+}
+.slide-dots {
+  position: absolute;
+  bottom: 12px; left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  z-index: 5;
+}
+.slide-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,.4);
+  cursor: pointer;
+  padding: 0;
+  transition: background .2s, transform .2s;
+}
+.dot-active { background: #fff; transform: scale(1.25); }
+.slide-progress {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: rgba(255,255,255,.15);
+  z-index: 5;
+}
+.slide-progress-bar { height: 100%; width: 0%; background: var(--b5, #3b82f6); }
+.slide-progress-running {
+  animation: slideProgress linear forwards;
+}
+@keyframes slideProgress {
+  from { width: 0% }
+  to   { width: 100% }
+}
+/* ── POPUP QUẢNG CÁO (qc.png) ── */
+.ad-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: adFadeIn .3s ease;
+}
+@keyframes adFadeIn { from{opacity:0} to{opacity:1} }
+
+.ad-modal {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px 16px 20px;
+  max-width: 420px;
+  width: 92%;
+  box-shadow: 0 24px 64px rgba(0,40,120,.3);
+  animation: adSlideUp .35s cubic-bezier(.22,1,.36,1);
+  text-align: center;
+}
+@keyframes adSlideUp {
+  from { opacity:0; transform:translateY(40px) scale(.96) }
+  to   { opacity:1; transform:translateY(0) scale(1) }
+}
+.ad-close {
+  position: absolute;
+  top: 10px; right: 12px;
+  background: rgba(0,0,0,.45);
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+  transition: background .15s;
+}
+.ad-close:hover { background: rgba(0,0,0,.7); }
+.ad-img {
+  width: 100%;
+  border-radius: 10px;
+  display: block;
+  margin-bottom: 14px;
+  object-fit: cover;
+  max-height: 360px;
+}
+.ad-actions { display: flex; gap: 10px; justify-content: center; }
+.ad-btn-primary {
+  background: var(--b6, #2563eb);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.ad-btn-primary:hover { background: var(--b7, #1d4ed8); transform: translateY(-1px); }
+.ad-btn-secondary {
+  background: none;
+  border: 1.5px solid var(--g300, #d1d5db);
+  color: var(--g500, #6b7280);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color .2s, color .2s;
+}
+.ad-btn-secondary:hover { border-color: var(--g400); color: var(--g700); }
+
+/* ── VIDEO PLACEHOLDER (canvas animation) ── */
+.video-placeholder-wrap {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 260px;
+}
+.video-ph-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,.55);
+  color: #7dd3fc;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  padding: 3px 10px;
+  border-radius: 20px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ── THREED SLIDESHOW ── */
+.threed-slideshow {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,60,140,.25);
+  background: #000;
+}
+.slideshow-track {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+.slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease; }
+.slide-active { opacity: 1; z-index: 1; }
+.slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.slide-btn {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(0,0,0,.45);
+  color: #fff; border: none;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  font-size: 22px; line-height: 1;
+  cursor: pointer; transition: background .2s;
+}
+.slide-btn:hover { background: rgba(0,60,180,.7); }
+.slide-btn-prev { left: 10px; }
+.slide-btn-next { right: 10px; }
+.slide-caption {
+  position: absolute; bottom: 36px; left: 0; right: 0;
+  text-align: center; font-size: 12px; color: #e0e8ff;
+  background: rgba(0,0,0,.45); padding: 4px 12px; z-index: 5;
+}
+.slide-dots {
+  position: absolute; bottom: 12px; left: 0; right: 0;
+  display: flex; justify-content: center; gap: 7px; z-index: 5;
+}
+.slide-dot {
+  width: 8px; height: 8px; border-radius: 50%; border: none;
+  background: rgba(255,255,255,.4); cursor: pointer; padding: 0;
+  transition: background .2s, transform .2s;
+}
+.dot-active { background: #fff; transform: scale(1.25); }
+.slide-progress {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; background: rgba(255,255,255,.15); z-index: 5;
+}
+.slide-progress-bar { height: 100%; width: 0%; background: var(--b5, #3b82f6); }
+.slide-progress-running { animation: slideProgress linear forwards; }
+@keyframes slideProgress { from{width:0%} to{width:100%} }

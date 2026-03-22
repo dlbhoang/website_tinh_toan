@@ -43,11 +43,12 @@ export const topNavItems = [
         { label: 'Phương pháp xây dựng sơ đồ khai triển, phân bố QA = QB.', page: '1pha-qa-qb' },
         { label: 'Phương pháp xây dựng sơ đồ khai triển, phân bố QA = 2.QB.', page: '1pha-qa-2qb' },
         { label: 'Phương pháp xây dựng sơ đồ khai triển 2 lớp, phân bố QA = 3.QB.', page: '1pha-qa-3qb' },
-        { label: 'Phương pháp xây dựng sơ đồ khai triển, 2 lớp.', page: '1pha-2lop' },
+        { label: 'Phương pháp xây dựng sơ đồ khai triển động cơ 1 pha 2 lớp.', page: '1pha-2lop' },
         { label: 'Phương pháp xây dựng sơ đồ khai triển, Pha làm việc và pha khởi động dây quấn sin.', page: '1pha-sin' },
       ]},
     ],
   },
+  { id: 'mach-nhanh-song-song', label: 'Các sơ đồ mạch nhánh song song (A)', page: 'mach-nhanh-song-song', children: [] },
   { id: 'lien-he', label: 'Liên hệ với chúng tôi', page: 'lien-he', children: [] },
 ]
 

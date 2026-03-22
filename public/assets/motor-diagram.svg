@@ -1,0 +1,43 @@
+<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="motor-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0f766e;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#0f766e;stop-opacity:0.3" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="600" height="400" fill="#f3f4f6"/>
+  <!-- Motor body -->
+  <ellipse cx="200" cy="200" rx="120" ry="140" fill="url(#motor-grad)" stroke="#0f766e" stroke-width="2"/>
+  <!-- Stator core -->
+  <circle cx="200" cy="200" r="100" fill="#d1fae5" stroke="#0f766e" stroke-width="2"/>
+  <!-- Rotor core -->
+  <circle cx="200" cy="200" r="70" fill="#14b8a6" stroke="#0f766e" stroke-width="1.5"/>
+  <!-- Air gap lines -->
+  <circle cx="200" cy="200" r="85" fill="none" stroke="#0f766e" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+  <!-- Shaft -->
+  <rect x="195" y="125" width="10" height="150" fill="#6b7280"/>
+  <circle cx="200" cy="125" r="8" fill="#4b5563"/>
+  <!-- Stator windings -->
+  <path d="M 130 200 Q 120 170 140 150" stroke="#3b82f6" stroke-width="3" fill="none"/>
+  <path d="M 270 200 Q 280 170 260 150" stroke="#ef4444" stroke-width="3" fill="none"/>
+  <!-- Dimensions -->
+  <g opacity="0.7">
+    <line x1="50" y1="200" x2="50" y2="340" stroke="#6b7280" stroke-width="0.5"/>
+    <line x1="45" y1="200" x2="55" y2="200" stroke="#6b7280" stroke-width="1"/>
+    <line x1="45" y1="340" x2="55" y2="340" stroke="#6b7280" stroke-width="1"/>
+    <text x="30" y="275" font-size="11" fill="#6b7280">H(mm)</text>
+  </g>
+  <g opacity="0.7">
+    <line x1="200" y1="360" x2="320" y2="360" stroke="#6b7280" stroke-width="0.5"/>
+    <line x1="200" y1="355" x2="200" y2="365" stroke="#6b7280" stroke-width="1"/>
+    <line x1="320" y1="355" x2="320" y2="365" stroke="#6b7280" stroke-width="1"/>
+    <text x="250" y="378" font-size="11" fill="#6b7280">Dn(mm)</text>
+  </g>
+  <!-- Label -->
+  <text x="200" y="30" font-size="14" font-weight="bold" text-anchor="middle" fill="#1f2937">Stator Motor Diagram</text>
+  <text x="450" y="100" font-size="12" fill="#374151">L(cm): Length</text>
+  <text x="450" y="125" font-size="12" fill="#374151">Dt(cm): Diameter</text>
+  <text x="450" y="150" font-size="12" fill="#374151">Hg(cm): Air Gap</text>
+  <text x="450" y="200" font-size="12" fill="#374151">d1/d2(mm): Wire Dia.</text>
+</svg>
